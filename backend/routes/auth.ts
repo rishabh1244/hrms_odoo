@@ -45,6 +45,8 @@ export async function initAuthSchema() {
       phone VARCHAR(32) NOT NULL,
       employee_id VARCHAR(32) UNIQUE,
       role VARCHAR(16) NOT NULL,
+      status VARCHAR(16) NOT NULL DEFAULT 'absent'
+        CHECK (status IN ('present', 'absent', 'halfday', 'leave')),
       password_hash TEXT NOT NULL,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
