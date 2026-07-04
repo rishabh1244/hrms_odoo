@@ -176,6 +176,17 @@ router.get("/me", authenticateJwt, (req, res) => {
 });
 exports.default = router;
 /*
+  
+curl -X POST http://localhost:5000/admin/genereateEmployeeCredentials \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2IiwiZW1haWwiOiJqb2huLmRvYXNkZUBhZXhhbXBsZS5jb20iLCJjb21wYW55TmFtZSI6Ik9kb28gSW5kaWEiLCJuYW1lIjoiSm9obiBEb2UiLCJlbXBsb3llZUlkIjoiT0lKT0RPMjAyNjAwMDEiLCJyb2xlIjoiaHIiLCJpYXQiOjE3ODMxNDA3MTgsImV4cCI6MTc4Mzc0NTUxOH0.dT0d_z290qZlJj1KfyMTb9AcHfgpWxp0NZyveHfbjF4" \
+  -d '{
+    "name": "Alice Brown",
+    "email": "alice.brown@example.com",
+    "phone": "9876543212",
+    "role": "employee"
+  }'
+
 curl -X GET http://localhost:5000/auth/me \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2IiwiZW1haWwiOiJqb2huLmRvYXNkZUBhZXhhbXBsZS5jb20iLCJjb21wYW55TmFtZSI6Ik9kb28gSW5kaWEiLCJuYW1lIjoiSm9obiBEb2UiLCJlbXBsb3llZUlkIjoiT0lKT0RPMjAyNjAwMDEiLCJyb2xlIjoiaHIiLCJpYXQiOjE3ODMxNDA3MTgsImV4cCI6MTc4Mzc0NTUxOH0.dT0d_z290qZlJj1KfyMTb9AcHfgpWxp0NZyveHfbjF4"
 */

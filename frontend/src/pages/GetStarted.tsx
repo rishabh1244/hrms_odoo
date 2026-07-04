@@ -1,6 +1,50 @@
-import { Link } from "react-router-dom";
+import { FormEvent, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 export default function Register() {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setLoading(true);
+
+    const form = new FormData(e.currentTarget);
+    const body = {
+      company_name: form.get("company_name") as string,
+      name: `${form.get("first_name")} ${form.get("last_name")}`.trim(),
+      email: form.get("email") as string,
+      phone: form.get("phone_number") as string,
+      role: (form.get("role") as string).toLowerCase(),
+      password: form.get("password") as string,
+      confirm_password: form.get("password") as string,
+    };
+
+    try {
+      const res = await fetch(`${BASE_URL}/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      const data = await res.json();
+      console.log("Register response:", data);
+
+      if (res.ok) {
+        navigate("/login");
+      } else {
+        alert(data.message);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Network error");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <main className="min-h-screen bg-odoo-cream flex items-center justify-center p-6">
       <div className="w-full max-w-2xl rounded-[2rem] bg-white p-10 shadow-2xl shadow-odoo-purple/10 ring-1 ring-black/5">
@@ -14,25 +58,26 @@ export default function Register() {
           </p>
         </div>
 
-        <form className="grid gap-5">
+        <form onSubmit={handleSubmit} className="grid gap-5">
           <div className="grid gap-5 md:grid-cols-2">
-            <Input label="Company Name" />
-            <Input label="Role" placeholder="HR / ADMIN" />
+            <Input label="Company Name" name="company_name" />
+            <Input label="Role" name="role" placeholder="HR / ADMIN" />
           </div>
 
           <div className="grid gap-5 md:grid-cols-2">
-            <Input label="First Name" />
-            <Input label="Last Name" />
+            <Input label="First Name" name="first_name" />
+            <Input label="Last Name" name="last_name" />
           </div>
 
           <div className="grid gap-5 md:grid-cols-2">
-            <Input label="Email" type="email" />
-            <Input label="Phone Number" />
+            <Input label="Email" name="email" type="email" />
+            <Input label="Phone Number" name="phone_number" />
           </div>
 
-          <Input label="Password" type="password" />
+          <Input label="Password" name="password" type="password" />
 
           <button
+            disabled={loading}
             className="
               mt-4
               rounded-xl
@@ -42,9 +87,10 @@ export default function Register() {
               text-white
               transition
               hover:bg-odoo-purple-dark
+              disabled:opacity-50
             "
           >
-            Register Employee
+            {loading ? "Registering…" : "Register Employee"}
           </button>
         </form>
 
@@ -64,10 +110,12 @@ export default function Register() {
 
 function Input({
   label,
+  name,
   type = "text",
   placeholder,
 }: {
   label: string;
+  name: string;
   type?: string;
   placeholder?: string;
 }) {
@@ -78,6 +126,7 @@ function Input({
       </label>
 
       <input
+        name={name}
         type={type}
         placeholder={placeholder}
         className="

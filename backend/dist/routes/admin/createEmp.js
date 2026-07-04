@@ -21,16 +21,22 @@ router.post("/genereateEmployeeCredentials", auth_1.authenticateJwt, requireHrOr
     if (typeof req.user === "string" || !req.user) {
         return res.status(401).json({ message: "Invalid authenticated user" });
     }
-    const companyName = typeof req.user.companyName === "string" ? req.user.companyName.trim() : "";
+    const companyName = typeof req.user.companyName === "string"
+        ? req.user.companyName.trim()
+        : "";
     const name = (req.body.name ?? "").trim();
     const email = (req.body.email ?? "").trim().toLowerCase();
     const phone = (req.body.phone ?? req.body.phone_number ?? "").trim();
     const role = (req.body.role ?? "employee").trim().toLowerCase();
     if (!companyName) {
-        return res.status(400).json({ message: "Authenticated user company is required" });
+        return res
+            .status(400)
+            .json({ message: "Authenticated user company is required" });
     }
     if (!name || !email || !phone || !role) {
-        return res.status(400).json({ message: "Name, email, phone number, and role are required" });
+        return res
+            .status(400)
+            .json({ message: "Name, email, phone number, and role are required" });
     }
     if (!isValidEmail(email)) {
         return res.status(400).json({ message: "Valid email is required" });
@@ -49,20 +55,23 @@ router.post("/genereateEmployeeCredentials", auth_1.authenticateJwt, requireHrOr
             user: result.rows[0],
             credentials: {
                 employee_id: employeeId,
-                password,
             },
         });
     }
     catch (error) {
         if (error.code === "23505") {
-            return res.status(409).json({ message: "Email or employee ID is already registered" });
+            return res
+                .status(409)
+                .json({ message: "Email or employee ID is already registered" });
         }
         if (error instanceof Error &&
             ["Company name", "Name"].some((prefix) => error.message.startsWith(prefix))) {
             return res.status(400).json({ message: error.message });
         }
         console.error("Employee credential generation failed", error);
-        return res.status(500).json({ message: "Employee credential generation failed" });
+        return res
+            .status(500)
+            .json({ message: "Employee credential generation failed" });
     }
 });
 exports.default = router;
