@@ -51,8 +51,9 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalLoading, setModalLoading] = useState(false);
-  const [modalResult, setModalResult] = useState<{ employee_id: string; password: string } | null>(null);
+  const [modalResult, setModalResult] = useState<{ name: string; employee_id: string; password: string } | null>(null);
   const [modalError, setModalError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const fetchEmployees = useCallback(async () => {
@@ -159,7 +160,7 @@ export default function Dashboard() {
       const data = await res.json();
 
       if (res.ok) {
-        setModalResult(data.credentials);
+        setModalResult({ name: data.user.name, ...data.credentials });
         e.currentTarget.reset();
         await fetchEmployees();
       } else {
@@ -275,7 +276,7 @@ export default function Dashboard() {
           <h2 className="text-2xl font-semibold tracking-tight text-odoo-purple">Employee Overview</h2>
           <button
             type="button"
-            onClick={() => { setModalOpen(true); setModalResult(null); setModalError(""); }}
+            onClick={() => { setModalOpen(true); setModalResult(null); setModalError(""); setShowPassword(false); }}
             className="rounded-lg bg-gradient-to-r from-odoo-teal to-cyan-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-odoo-teal/30 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-odoo-teal/25 active:scale-[0.97]"
           >
             + New Employee
@@ -320,10 +321,37 @@ export default function Dashboard() {
             {modalResult ? (
               <div className="space-y-4">
                 <div className="rounded-xl bg-odoo-cream p-4">
-                  <p className="text-sm font-medium text-odoo-muted">Employee ID</p>
+                  <p className="text-sm font-medium text-odoo-muted">Name</p>
+                  <p className="mt-1 text-lg font-semibold text-odoo-ink">{modalResult.name}</p>
+                  <p className="mt-4 text-sm font-medium text-odoo-muted">Employee ID</p>
                   <p className="mt-1 text-lg font-semibold text-odoo-ink">{modalResult.employee_id}</p>
-                  <p className="mt-3 text-sm font-medium text-odoo-muted">Password</p>
-                  <p className="mt-1 font-mono text-lg font-semibold text-odoo-teal">{modalResult.password}</p>
+                  <p className="mt-4 text-sm font-medium text-odoo-muted">Password</p>
+                  <div className="mt-1 flex items-center gap-2">
+                    <input
+                      readOnly
+                      type={showPassword ? "text" : "password"}
+                      value={modalResult.password}
+                      className="w-full bg-transparent font-mono text-lg font-semibold text-odoo-teal outline-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="shrink-0 rounded-lg p-1.5 text-odoo-muted transition hover:bg-white/50 hover:text-odoo-ink"
+                      title={showPassword ? "Hide password" : "Show password"}
+                    >
+                      {showPassword ? (
+                        <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                          <line x1="1" y1="1" x2="23" y2="23" />
+                        </svg>
+                      ) : (
+                        <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                          <circle cx="12" cy="12" r="3" />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
                 </div>
                 <p className="text-xs text-odoo-muted">Share these credentials with the employee.</p>
                 <button

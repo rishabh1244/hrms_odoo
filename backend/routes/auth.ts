@@ -55,6 +55,48 @@ export async function initAuthSchema() {
   await pool.query(`
     ALTER TABLE users ADD COLUMN IF NOT EXISTS status VARCHAR(16) NOT NULL DEFAULT 'absent';
   `);
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS employee_details (
+      id BIGSERIAL PRIMARY KEY,
+      user_id BIGINT NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+      date_of_birth DATE,
+      age INT,
+      joining_date DATE NOT NULL DEFAULT CURRENT_DATE,
+      department VARCHAR(128),
+      designation VARCHAR(128),
+      address TEXT,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `);
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS payroll (
+      id BIGSERIAL PRIMARY KEY,
+      user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      monthly_wage NUMERIC(12,2) NOT NULL DEFAULT 0,
+      yearly_wage NUMERIC(12,2) NOT NULL DEFAULT 0,
+      travel_allowance NUMERIC(10,2) NOT NULL DEFAULT 0,
+      fixed_allowance NUMERIC(10,2) NOT NULL DEFAULT 0,
+      tax_deduction NUMERIC(10,2) NOT NULL DEFAULT 0,
+      effective_date DATE NOT NULL DEFAULT CURRENT_DATE,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `);
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS attendance_records (
+      id BIGSERIAL PRIMARY KEY,
+      user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      date DATE NOT NULL DEFAULT CURRENT_DATE,
+      check_in TIME,
+      check_out TIME,
+      status VARCHAR(16) NOT NULL DEFAULT 'absent',
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `);
 }
 
 function getJwtSecret() {
