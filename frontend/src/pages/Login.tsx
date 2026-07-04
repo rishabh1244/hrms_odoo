@@ -2,10 +2,10 @@ import { Link } from "react-router-dom";
 
 export default function Login() {
   return (
-    <main className="min-h-screen bg-odoo-cream flex items-center justify-center p-6">
-      <div className="w-full max-w-md rounded-[2rem] bg-white p-10 shadow-2xl shadow-odoo-purple/10 ring-1 ring-black/5">
+    <main className="flex min-h-screen items-center justify-center bg-odoo-cream px-4 py-8 sm:px-6">
+      <div className="w-full max-w-md rounded-[2rem] bg-white p-6 shadow-2xl shadow-odoo-purple/10 ring-1 ring-black/5 sm:p-8 md:p-10">
         <div className="text-center">
-          <h1 className="text-4xl font-semibold text-odoo-purple">
+          <h1 className="text-3xl font-semibold text-odoo-purple sm:text-4xl">
             Welcome Back
           </h1>
 
@@ -27,6 +27,7 @@ export default function Login() {
 
           <button
             className="
+              w-full
               rounded-xl
               bg-odoo-purple
               py-3
@@ -43,7 +44,7 @@ export default function Login() {
         <p className="mt-8 text-center text-sm text-odoo-muted">
           Don't have an account?{" "}
           <Link
-            to="/register"
+            to="/getstarted"
             className="font-semibold text-odoo-purple hover:underline"
           >
             Register
