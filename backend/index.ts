@@ -3,6 +3,7 @@ import cors from "cors";
 import express from "express";
 import adminRouter from "./routes/admin/createEmp";
 import authRouter, { initAuthSchema } from "./routes/auth";
+import employeeRouter from "./routes/employee";
 
 const app = express();
 const port = Number(process.env.PORT) || 5000;
@@ -16,6 +17,7 @@ app.get("/health", (_req, res) => {
 
 app.use("/auth", authRouter);
 app.use("/admin", adminRouter);
+app.use("/employee", employeeRouter);
 
 async function startServer() {
   await initAuthSchema();

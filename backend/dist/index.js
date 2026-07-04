@@ -41,6 +41,7 @@ const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
 const createEmp_1 = __importDefault(require("./routes/admin/createEmp"));
 const auth_1 = __importStar(require("./routes/auth"));
+const employee_1 = __importDefault(require("./routes/employee"));
 const app = (0, express_1.default)();
 const port = Number(process.env.PORT) || 5000;
 app.use((0, cors_1.default)({ origin: true }));
@@ -50,6 +51,7 @@ app.get("/health", (_req, res) => {
 });
 app.use("/auth", auth_1.default);
 app.use("/admin", createEmp_1.default);
+app.use("/employee", employee_1.default);
 async function startServer() {
     await (0, auth_1.initAuthSchema)();
     app.listen(port, () => {
