@@ -29,7 +29,7 @@ export default function Login() {
 
       if (res.ok) {
         localStorage.setItem("token", data.token);
-        navigate("/");
+        navigate("/dashboard");
       } else {
         alert(data.message);
       }

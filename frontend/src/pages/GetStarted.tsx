@@ -33,7 +33,7 @@ export default function Register() {
       console.log("Register response:", data);
 
       if (res.ok) {
-        navigate("/login");
+        navigate("/dashboard");
       } else {
         alert(data.message);
       }

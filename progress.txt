@@ -1,4 +1,4 @@
-Authentication Block
+Authentication Block          COMPLEATED !
 
 - JWT Authentication    DONE 
 - only hr can register  DONE
